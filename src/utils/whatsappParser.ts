@@ -1,4 +1,4 @@
-import type { ParsedMessage, ParsedChat } from '../types';
+import type { ParsedMessage, ParsedChat, MediaCollection } from '../types';
 
 export class WhatsAppParser {
   // Regex pattern to match WhatsApp message format: [DD.MM.YYYY, HH:MM:SS] Sender: Message
@@ -7,7 +7,7 @@ export class WhatsAppParser {
   // Regex pattern for system messages (security code changes, etc.)
   private static readonly SYSTEM_PATTERN = /^\[(\d{2}\.\d{2}\.\d{4}), (\d{2}:\d{2}:\d{2})\] (.+)$/;
 
-  static parseChat(chatContent: string, chatName: string, mediaFiles: string[] = []): ParsedChat {
+  static parseChat(chatContent: string, chatName: string, mediaFiles: MediaCollection | string[] = []): ParsedChat {
     const lines = chatContent.split('\n').filter(line => line.trim());
     const messages: ParsedMessage[] = [];
     const participants = new Set<string>();
@@ -84,6 +84,15 @@ export class WhatsAppParser {
       end: messages.length > 0 ? messages[messages.length - 1].timestamp : new Date()
     };
     
+    // Handle both old string array format and new MediaCollection format
+    const hasMedia = Array.isArray(mediaFiles) 
+      ? mediaFiles.length > 0 
+      : Object.values(mediaFiles).some(arr => arr.length > 0);
+    
+    const processedMediaFiles = Array.isArray(mediaFiles) 
+      ? { images: [], videos: [], audio: [], documents: [] } // Convert old format to new
+      : mediaFiles;
+    
     return {
       id: this.generateChatId(chatName),
       name: chatName,
@@ -91,8 +100,8 @@ export class WhatsAppParser {
       messages,
       messageCount: messages.length,
       dateRange,
-      hasMedia: mediaFiles.length > 0,
-      mediaFiles
+      hasMedia,
+      mediaFiles: processedMediaFiles
     };
   }
   

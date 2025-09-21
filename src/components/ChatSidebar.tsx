@@ -6,12 +6,16 @@ interface ChatSidebarProps {
   chats: ParsedChat[];
   selectedChat: ParsedChat | null;
   onChatSelect: (chat: ParsedChat) => void;
+  isVisible?: boolean;
+  onClose?: () => void;
 }
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = ({ 
   chats, 
   selectedChat, 
-  onChatSelect 
+  onChatSelect,
+  isVisible = true,
+  onClose
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'messages'>('date');
@@ -72,9 +76,20 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   };
 
   return (
-    <aside className="chat-sidebar">
+    <aside className={`chat-sidebar ${isVisible ? 'visible' : 'hidden'}`}>
       <div className="sidebar-header">
-        <h3>WhatsApp Chats ({chats.length})</h3>
+        <div className="sidebar-header-top">
+          <h3>WhatsApp Chats ({chats.length})</h3>
+          {onClose && (
+            <button 
+              className="sidebar-close"
+              onClick={onClose}
+              aria-label="Close chat list"
+            >
+              ×
+            </button>
+          )}
+        </div>
         <div className="sidebar-controls">
           <input
             type="text"
@@ -133,8 +148,10 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     <span className="message-count">
                       💬 {chat.messageCount}
                     </span>
-                    {chat.hasMedia && (
-                      <span className="media-badge">📎</span>
+                    {chat.hasMedia && chat.mediaFiles && (
+                      <span className="media-badge" title="Media files">
+                        📎 {Object.values(chat.mediaFiles).reduce((total, files) => total + files.length, 0)}
+                      </span>
                     )}
                   </div>
                 </div>

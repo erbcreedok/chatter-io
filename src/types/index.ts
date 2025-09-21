@@ -8,6 +8,20 @@ export interface ParsedMessage {
   callDuration?: string; // for call messages like "Video call 13 min"
 }
 
+export interface MediaFile {
+  name: string;
+  path: string;
+  size: number;
+  type: string;
+}
+
+export interface MediaCollection {
+  images: MediaFile[];
+  videos: MediaFile[];
+  audio: MediaFile[];
+  documents: MediaFile[];
+}
+
 export interface ParsedChat {
   id: string;
   name: string;
@@ -19,7 +33,7 @@ export interface ParsedChat {
     end: Date;
   };
   hasMedia: boolean;
-  mediaFiles?: string[];
+  mediaFiles?: MediaCollection;
 }
 
 export interface ChatCollection {

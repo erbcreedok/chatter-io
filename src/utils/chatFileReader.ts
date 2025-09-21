@@ -1,4 +1,4 @@
-import type { ParsedChat, ChatCollection } from '../types';
+import type { ParsedChat, ChatCollection, MediaCollection } from '../types';
 import { WhatsAppParser } from './whatsappParser';
 
 interface ProcessedChatData {
@@ -7,7 +7,7 @@ interface ProcessedChatData {
   chats: {
     name: string;
     content: string;
-    mediaFiles: string[];
+    mediaFiles: MediaCollection | string[];
     source: string;
   }[];
 }
@@ -185,7 +185,7 @@ export class ChatFileReader {
   }
   
   // Method to parse a single chat file (for future file upload functionality)
-  static parseChatFile(fileContent: string, fileName: string, mediaFiles: string[] = []): ParsedChat {
+  static parseChatFile(fileContent: string, fileName: string, mediaFiles: MediaCollection | string[] = []): ParsedChat {
     const chatName = this.extractChatNameFromFileName(fileName);
     return WhatsAppParser.parseChat(fileContent, chatName, mediaFiles);
   }
