@@ -1,4 +1,4 @@
-import type { ParsedMessage, ParsedChat, MediaCollection } from '../types';
+import type { ParsedMessage, ParsedChat, MediaCollection, MediaFile } from '../types';
 
 export class WhatsAppParser {
   // Regex pattern to match WhatsApp message format: [DD.MM.YYYY, HH:MM:SS] Sender: Message
@@ -11,6 +11,17 @@ export class WhatsAppParser {
     const lines = chatContent.split('\n').filter(line => line.trim());
     const messages: ParsedMessage[] = [];
     const participants = new Set<string>();
+    
+    // Create a flat array of all media files for easier lookup
+    const allMediaFiles: MediaFile[] = [];
+    if (!Array.isArray(mediaFiles)) {
+      allMediaFiles.push(
+        ...mediaFiles.images,
+        ...mediaFiles.videos,
+        ...mediaFiles.audio,
+        ...mediaFiles.documents
+      );
+    }
     
     let currentMessage: ParsedMessage | null = null;
     
@@ -35,14 +46,18 @@ export class WhatsAppParser {
         const cleanSender = this.cleanSenderName(sender);
         participants.add(cleanSender);
         
+        const messageType = this.determineMessageType(content);
+        const associatedMedia = this.findAssociatedMedia(content, allMediaFiles);
+        
         currentMessage = {
           id: `${timestamp.getTime()}-${messages.length}`,
           timestamp,
           sender: cleanSender,
           content: content.trim(),
-          type: this.determineMessageType(content),
+          type: messageType,
           isOmitted: this.isOmittedContent(content),
-          callDuration: this.extractCallDuration(content)
+          callDuration: this.extractCallDuration(content),
+          mediaFile: associatedMedia
         };
       } else {
         // Check if it's a system message
@@ -156,6 +171,25 @@ export class WhatsAppParser {
     return undefined;
   }
   
+  private static findAssociatedMedia(content: string, mediaFiles: MediaFile[]): MediaFile | undefined {
+    // Look for media file references in the message content
+    // Pattern: <attached: filename> or similar
+    const attachmentMatch = content.match(/<attached:\s*([^>]+)>/i);
+    if (attachmentMatch) {
+      const fileName = attachmentMatch[1].trim();
+      return mediaFiles.find(file => file.name === fileName);
+    }
+    
+    // Look for direct file references
+    const fileMatch = content.match(/(-\d{7}-[A-Z]+-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.[a-z]+)/i);
+    if (fileMatch) {
+      const fileName = fileMatch[1];
+      return mediaFiles.find(file => file.name === fileName);
+    }
+    
+    return undefined;
+  }
+
   private static generateChatId(chatName: string): string {
     return chatName
       .toLowerCase()

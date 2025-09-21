@@ -6,11 +6,13 @@ export interface ParsedMessage {
   type: 'text' | 'audio' | 'video' | 'sticker' | 'image' | 'document' | 'call' | 'system';
   isOmitted?: boolean; // for "audio omitted", "sticker omitted" etc.
   callDuration?: string; // for call messages like "Video call 13 min"
+  mediaFile?: MediaFile; // Associated media file if available
 }
 
 export interface MediaFile {
   name: string;
   path: string;
+  publicUrl: string;
   size: number;
   type: string;
 }

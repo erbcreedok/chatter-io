@@ -36,6 +36,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   };
 
   const renderMessageContent = () => {
+    // Render media content if available
+    if (message.mediaFile) {
+      return renderMediaContent();
+    }
+
     if (message.isOmitted) {
       return (
         <div className="omitted-content">
@@ -69,6 +74,79 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
           <span className="message-type-icon">{getMessageTypeIcon()}</span>
         )}
         {message.content}
+      </div>
+    );
+  };
+
+  const renderMediaContent = () => {
+    if (!message.mediaFile) return null;
+
+    const { mediaFile } = message;
+    const cleanContent = message.content.replace(/<attached:\s*[^>]+>/gi, '').trim();
+
+    return (
+      <div className="media-message">
+        {/* Render the actual media */}
+        {['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(mediaFile.type) && (
+          <div className="image-attachment">
+            <img 
+              src={mediaFile.publicUrl} 
+              alt={mediaFile.name}
+              className="message-image"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling!.textContent = `🖼️ Image: ${mediaFile.name}`;
+              }}
+            />
+            <div className="fallback-text" style={{ display: 'none' }}></div>
+          </div>
+        )}
+        
+        {['mp4', 'mov', 'avi', 'webm'].includes(mediaFile.type) && (
+          <div className="video-attachment">
+            <video 
+              controls 
+              className="message-video"
+              preload="metadata"
+            >
+              <source src={mediaFile.publicUrl} type={`video/${mediaFile.type}`} />
+              🎥 Video: {mediaFile.name}
+            </video>
+          </div>
+        )}
+        
+        {['opus', 'mp3', 'wav', 'm4a', 'ogg'].includes(mediaFile.type) && (
+          <div className="audio-attachment">
+            <div className="audio-header">
+              🎵 {mediaFile.type === 'opus' ? 'Voice Message' : 'Audio'}
+            </div>
+            <audio 
+              controls 
+              className="message-audio"
+              preload="metadata"
+            >
+              <source src={mediaFile.publicUrl} type={`audio/${mediaFile.type === 'opus' ? 'ogg' : mediaFile.type}`} />
+              Audio file: {mediaFile.name}
+            </audio>
+          </div>
+        )}
+        
+        {mediaFile.type === 'vcf' && (
+          <div className="contact-attachment">
+            📇 Contact: {mediaFile.name}
+            <a href={mediaFile.publicUrl} download className="download-link">
+              Download Contact
+            </a>
+          </div>
+        )}
+        
+        {/* Show any remaining text content */}
+        {cleanContent && (
+          <div className="message-text-with-media">
+            {cleanContent}
+          </div>
+        )}
       </div>
     );
   };

@@ -113,3 +113,112 @@
   font-size: 1rem;
   opacity: 0.8;
 }
+
+/* Media Message Styles */
+.media-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.image-attachment {
+  max-width: 300px;
+}
+
+.message-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.message-image:hover {
+  transform: scale(1.02);
+}
+
+.video-attachment {
+  max-width: 300px;
+}
+
+.message-video {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.audio-attachment {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem;
+  max-width: 250px;
+}
+
+.audio-header {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.message-audio {
+  width: 100%;
+  height: 32px;
+}
+
+.contact-attachment {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 200px;
+}
+
+.download-link {
+  color: inherit;
+  text-decoration: underline;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.download-link:hover {
+  opacity: 1;
+}
+
+.message-text-with-media {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: 0.5rem;
+}
+
+.fallback-text {
+  color: inherit;
+  font-style: italic;
+  opacity: 0.8;
+  font-size: 0.85rem;
+}
+
+/* Responsive media styles */
+@media (max-width: 768px) {
+  .image-attachment,
+  .video-attachment {
+    max-width: 250px;
+  }
+  
+  .message-image,
+  .message-video {
+    max-width: 250px;
+  }
+  
+  .audio-attachment {
+    max-width: 200px;
+  }
+  
+  .contact-attachment {
+    max-width: 180px;
+  }
+}

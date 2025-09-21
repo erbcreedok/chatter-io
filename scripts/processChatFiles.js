@@ -115,9 +115,13 @@ function categorizeMediaFiles(files, dirPath) {
     const filePath = path.join(dirPath, file);
     const stats = fs.statSync(filePath);
     
+    // Create public URL for the file
+    const publicUrl = `/media/${dirPath.split('/').pop()}/${file}`;
+    
     const fileInfo = {
       name: file,
       path: filePath,
+      publicUrl: publicUrl,
       size: stats.size,
       type: ext.substring(1) // Remove the dot
     };
