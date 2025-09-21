@@ -1,0 +1,31 @@
+BEGIN:VCARD
+VERSION:3.0
+N:;Ильяс Менеджер Счастья;;;
+FN:Ильяс Менеджер Счастья
+X-WA-BIZ-NAME:Ильяс BI Group
+X-WA-BIZ-DESCRIPTION:Менеджер проектов  
+
+ЖК Jetisu Aqsu 6
+ЖК Jetisu Kerbez 2
+ЖК Jetisu Kerbez Comfort 1
+ЖК Jetisu Satti 
+ЖК Jetisu Nauryz 
+ЖК Jetisu Aspan
+ЖК Bosağa
+TEL;type=CELL;type=VOICE;waid=77479358359:+7 747 935 8359
+END:VCARD_$!<VCard-Separator>!$_BEGIN:VCARD
+VERSION:3.0
+N:;Ильяс Асана Квартира;;;
+FN:Ильяс Асана Квартира
+X-WA-BIZ-NAME:Ильяс BI Group
+X-WA-BIZ-DESCRIPTION:Менеджер проектов  
+
+ЖК Jetisu Aqsu 6
+ЖК Jetisu Kerbez 2
+ЖК Jetisu Kerbez Comfort 1
+ЖК Jetisu Satti 
+ЖК Jetisu Nauryz 
+ЖК Jetisu Aspan
+ЖК Bosağa
+TEL;waid=77479358359:+7 747 935 8359
+END:VCARD
